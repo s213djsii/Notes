@@ -1,0 +1,127 @@
+Maven is a build and dependency tool
+
+Lifecycle of maven :
+->Validate: validates the code - checks all dependencies and configuration are available and crt
+->compile: in this java code is converted to byte code
+->test: it runs all the unit test cases
+->package: converts them into jar
+->verify: it verifies all the compiled code 
+->install : moves packages to local repo(target class)
+->deploy: it moves the packages to remote repo, so everyone can use
+
+#Plugins:extra functionalities that are needed can be added to our project without affecting the base code, Eg: Sonarlint
+
+#In maven ,
+maven know wt to do (project manager),
+plugins know how to do(skilled worker)
+
+Notes:
+in lifecycle, if a command is executed , then it will execute all the previuos one including that
+clean - remove the package from target 
+target - it is a place where all the dependencies are stored
+In case, using of lib - add dependency in that service(pom.xml) and build
+If it fails, generate authorization token in developer settings and add it in settings.xml - 401 unauthorized
+if the code is not reflected or updated properly, delete the target and build again or delete the file in local repo and build.
+
+Dependency: It is a jar file - to be added in pom.xml
+it contains 3 :
+-> group id : it will make sure the lib belong to which organization, eg:com.google
+-> artifact id: unique name of ur lib to identify
+-> version : since there can be many updated version(changes in code)
+# Note : snapshot is added, to represent it is unstable and can be modified
+all the dependencies are included in pom.xml
+#pom means project object model
+
+Transitive Dependency : If in loan service , i am adding 'A' lib dependency and 'A' as 'B' as it dependency , then maven automatically injects it w/o explicit declaration
+In case of many versions, it takes 1 which declared explicitly with version or takes nearest in depedency tree
+Dependency Tree - in case 'dora' lib is in 'd' and in 1 dependency , it goes like A->B->dora(1.0) and in other A->B->c->dora(2.0), then it takes 1.0, since it is nearest.
+we can exclude transitive depedency by adding <exclusion> command.
+
+#dependency vs dependency management
+in dependencies, if u add a dependency , it will consider it in class path and download it. can use a lib in ur service
+in dependency management, it will not be included in class path, it is used for global versioning, so in case both has versioning, it will consider 1 in dependencies
+Eg:
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>library-a</artifactId>
+            <version>1.0.0</version> <!-- Version defined centrally -->
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>com.example</groupId>
+        <artifactId>library-a</artifactId>
+        <version>2.0.0</version> <!-- Version specified here -->
+    </dependency>
+</dependencies>
+so 2.0.0 will be taken.
+
+#BOM - Bill of Materials - used for central versioning
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-bom</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>  <!-- Packaging type is 'pom' to indicate a BOM -->
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Define versioned dependencies here -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.12.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>5.3.9</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
+
+-----------packaging pom makes it as bom file. now using it in other service.----
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Import the BOM -->
+            <dependency>
+                <groupId>com.example</groupId>
+                <artifactId>my-bom</artifactId>
+                <version>1.0.0</version>
+                <scope>import</scope> <!-- This is what makes it a BOM import -->
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Use dependencies from the BOM without specifying versions -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>  <!-- No version specified -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>  <!-- No version specified -->
+        </dependency>
+    </dependencies>
+</project>
+
+in this , the version is not specified since it takes from parent class. by using <scope>import.
