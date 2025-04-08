@@ -1,6 +1,8 @@
 Maven is a build and dependency tool
 
-Lifecycle of maven :
+Lifecycle of maven :clean, default and site
+clean - remove the package from target 
+Default contain following phases:
 ->Validate: validates the code - checks all dependencies and configuration are available and crt
 ->compile: in this java code is converted to byte code
 ->test: it runs all the unit test cases
@@ -8,6 +10,7 @@ Lifecycle of maven :
 ->verify: it verifies all the compiled code 
 ->install : moves packages to local repo(target class)
 ->deploy: it moves the packages to remote repo, so everyone can use
+site- for project documentation
 
 #Plugins:extra functionalities that are needed can be added to our project without affecting the base code, Eg: Sonarlint
 
@@ -17,7 +20,6 @@ plugins know how to do(skilled worker)
 
 Notes:
 in lifecycle, if a command is executed , then it will execute all the previuos one including that
-clean - remove the package from target 
 target - it is a place where all the dependencies are stored
 In case, using of lib - add dependency in that service(pom.xml) and build
 If it fails, generate authorization token in developer settings and add it in settings.xml - 401 unauthorized
