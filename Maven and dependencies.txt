@@ -127,3 +127,14 @@ so 2.0.0 will be taken.
 </project>
 
 in this , the version is not specified since it takes from parent class. by using <scope>import.
+
+so why do we need to use dependency management and bom????????
+Maven does not automatically use the latest version unless explicitly told to.
+🛠 If you're seeing a version being pulled without specifying it:
+-> It’s likely coming from:
+-> A BOM (Bill of Materials) you've imported with scope: import.
+-> A parent POM that has <dependencyManagement> already.
+-> A transitive dependency from another library.
+-> You're using a plugin like Spring Boot’s dependency management, which resolves versions for you.
+
+
