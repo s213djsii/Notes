@@ -1,0 +1,41 @@
+Transactional:
+->This annotation is used in database actions.
+->To exceute completely or roll back in case of errors.
+->Best practice to use in service layer
+->This will not work in case of:
+#private methods
+Eg:
+@Transactional
+    private void saveUser(User user) {
+        // This will NOT run in a transaction!
+        userRepository.save(user);
+    }
+
+#methods called within same class
+Eg:
+@Service
+public class OrderService {
+
+    public void placeOrder(Order order) {
+        // This call bypasses the proxy
+        saveOrder(order);
+    }
+
+    @Transactional
+    public void saveOrder(Order order) {
+        orderRepository.save(order);  // No transaction applied
+    }
+}
+
+#along with @async - since it starts to run in different thread 
+Eg:
+@Transactional
+@Async
+public void doSomethingAsync() {
+    // Transaction will NOT work here
+}
+These above cases doesn't meet proxy
+->proxy - the 1 which tells spring to abide this method with transactional rules.
+
+Note:In case of update and delete we tend to add transactional annotation, but the best practice is to declare method level.
+
