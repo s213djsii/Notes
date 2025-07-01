@@ -1,0 +1,61 @@
+
+Junit - it is a framework, that is used in jave - to write test
+
+@TestFactory – denotes a method that’s a test factory for dynamic tests(when data needs to be fetched at runtime)
+@DisplayName – defines a custom display name for a test class or a test method
+@Nested – denotes that the annotated class is a nested(when testing different states or scenarios of a class and you want to group tests logically.)
+  Eg:
+  @Nested
+    class AdditionTests {
+        @Test
+        void addsPositiveNumbers() {
+            assertEquals(5, 2 + 3);
+        }
+
+        @Test
+        void addsNegativeNumbers() {
+            assertEquals(-5, -2 + -3);
+        }
+    }
+@Tag – declares tags for filtering tests (mvn test -Dgroups=fast)
+@ExtendWith – registers custom extensions
+@BeforeEach – denotes that the annotated method will be executed before each test method (previously @Before)
+@AfterEach – denotes that the annotated method will be executed after each test method (previously @After)
+@BeforeAll – denotes that the annotated method will be executed before all test methods in the current class (previously @BeforeClass)
+@AfterAll – denotes that the annotated method will be executed after all test methods in the current class (previously @AfterClass)
+@Disabled – disables a test class or method (previously @Ignore)
+@test - to denote the method is a test method
+
+------------------------------------------ ********************** -------------------------------------------
+
+
+Assertions :
+
+
+assertTrue(CommonUtils.isNumeric("4242")) & Assertions.assertTrue() - both does same functionality - checks the value returns true
+assertFalse() - checks the method return false
+assertEquals(expected, actual) - 2 values are same
+assertNotEquals(expected, actual)
+assertNull(obj)
+assertNotNull(obj)
+assertSame(expected, actual)  -	Checks if two references point to the same object
+assertNotSame(expected, actual) -	Checks if they are different objects
+assertThrows(ExpectedException.class, () -> {})	Asserts a block of code throws an exception
+assertDoesNotThrow(() -> {})	Asserts a block of code doesn't throw
+assertTimeout(Duration, Executable)	Asserts the block completes in given time
+      Waits for the code block to complete, even after timeout.
+      Fails after the timeout only if the execution takes too long.
+      Does NOT interrupt the running code.
+assertTimeoutPreemptively(Duration, Executable)	Forcefully fails if time exceeds
+      Immediately fails once the timeout is reached.
+      It attempts to abort/interrupt the task preemptively.
+      Useful when testing potentially long-running or stuck code.
+
+
+AssertJ - it is a famous library for assertions
+assertThat(fido).isEqualTo(fidosClone); 
+assertThat(fido).isEqualToComparingFieldByFieldRecursively(fidosClone); --> when u have to compare entire field in a obj
+
+
+
+   
