@@ -1,0 +1,52 @@
+
+Mockito is a popular Java mocking framework used in unit testing to simulate the behavior of external dependencies
+@InjectMocks - used to inject mock in test class - means inject dependency
+Eg:
+    @InjectMocks
+    private BookService bookService; - service class
+	
+@Mock
+private ObjectMapper objectMapper; - the class that has been autowired in service class
+
+verify(billerTrackRepository).save((BillerTrack) any()) - checks atleast once the call (save operation has happened)
+
+Note: @ExtendWith(MockitoExtension.class) - always annotate this in JUnit test where mockito is used. 
+
+
+@Autowired - real object is created 
+@Mock - fake object 
+@Spy - partial object - i call the real method but i can override the return value
+
+Eg:
+   @Spy
+   Calculator calculator;
+
+   @Test
+   void testAdd() {
+      doReturn(100).when(calculator).add(5, 5); // 🔐 No real method is called
+	  }
+
+#### in this the add method is called but the return value is modified.
+
+@captor - this annotation captures the arguments passed to the method
+
+sample eg:
+ when(billerPaymentStatusTrackRepository.save(billerPaymentStatusTrack)).thenReturn(billerPaymentStatusTrack); --> it returns billerPaymentStatusTrack when db is called.
+ ArgumentCaptor<BillerPaymentStatusTrack> captor = ArgumentCaptor.forClass(BillerPaymentStatusTrack.class); --> this tells which object will be captured
+        billerServiceHelper.mapPaymentStatusTrackTable(1, 2); --> calls the method
+        verify(billerPaymentStatusTrackRepository).save(captor.capture()); --> its verifying .save is called and it also captures the arguments
+      
+	  
+---------------------------------------- ****************************** -----------------------------------------------
+
+ReflectionTestUtils :
+
+ReflectionTestUtils is a utility class provided by Spring in the org.springframework.test.util package. It's commonly used in unit tests to set or get values of private fields in a class when normal dependency injection (like @Autowired or @Value) doesn't apply — especially useful when testing with @Mock and @InjectMocks.
+
+Eg :  ReflectionTestUtils.setField(billerServiceHelper, "paymentPerDayTransactionCount", 1);
+       in this paymentPerDayTransactionCount - value fetched from application.properties
+	   
+for application properties we can use this also	   
+	   @TestPropertySource(properties = {
+        "appsflyer.events.enabled=true"
+})
